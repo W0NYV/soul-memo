@@ -5,33 +5,68 @@ import { open } from '@tauri-apps/api/dialog'
 import "./App.css";
 import { writeTextFile, BaseDirectory } from '@tauri-apps/api/fs';
 
-function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
+interface Radio {
+  label: string
+  value: string
+}
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-    setGreetMsg(await invoke("greet", { name }));
-  }
+function App() {
+  // const [greetMsg, setGreetMsg] = useState("");
+  // const [name, setName] = useState("");
+
+  const [soulPathList, setSoulPathList] = useState<Array<string>>([]);
+  const [memoIndex, setMemoIndex] = useState<string>("1");
+
+  const changeRadioValue = (event: React.ChangeEvent<HTMLInputElement>) => setMemoIndex(event.target.value);
+  const radioButtons: Radio[] = [
+    {label: "1", value: "1"},
+    {label: "2", value: "2"},
+    {label: "3", value: "3"},
+    {label: "4", value: "4"}
+  ]
+
+  // async function greet() {
+  //   // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
+  //   setGreetMsg(await invoke("greet", { name }));
+  // }
 
   function executeCommands() {
     invoke("simple_command");
   }
 
   function openDialog() {
-    open().then(files => console.log(files));
+    open().then(file => {
+      console.log(file);
+      setSoulPathList([...soulPathList, file as string]);
+    });
+  }
+
+  function deleteFromList(_path: string) {
+    setSoulPathList(soulPathList.filter((path, index) => (path !== _path)));
   }
 
   async function createMemo() {
-    await writeTextFile('hoge.txt', 'file contents', { dir: BaseDirectory.Download });
-    alert('Success');
+
+    if(soulPathList.length == 16) {
+      let str: string = soulPathList.toString().replace(/,/g, '\n');
+
+      await writeTextFile('footage' + memoIndex + '.txt', str, { dir: BaseDirectory.Desktop });
+      alert('Created!');
+    } else {
+      alert('だめよーだめだめ');
+    }
+
+  }
+
+  function resetPathList() {
+    setSoulPathList([]);
   }
 
   return (
     <div className="container">
-      <h1>Welcome to Tauri!</h1>
+      <h1>Soul Memo</h1>
 
-      <div className="row">
+      {/* <div className="row">
         <a href="https://vitejs.dev" target="_blank">
           <img src="/vite.svg" className="logo vite" alt="Vite logo" />
         </a>
@@ -43,9 +78,9 @@ function App() {
         </a>
       </div>
 
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
+      <p>Click on the Tauri, Vite, and React logos to learn more.</p> */}
 
-      <form
+      {/* <form
         className="row"
         onSubmit={(e) => {
           e.preventDefault();
@@ -60,10 +95,38 @@ function App() {
         <button type="submit">Greet</button>
       </form>
 
-      <p>{greetMsg}</p>
+      <p>{greetMsg}</p> */}
 
-      <button onClick={openDialog}>Click to open dialog</button>
-      <button onClick={createMemo}>create</button>
+      <div className="row">
+        <button onClick={openDialog}>Open dialog</button>
+        <button onClick={resetPathList}>Reset list</button>
+      </div>
+
+      <p>{"ソウルの数: " + soulPathList.length}</p>
+
+      <ul>
+        {soulPathList.map(path =>
+          <div className="row-left">
+            <button className="delete-button" onClick={() => deleteFromList(path)}>delete</button>
+            <li>{path}</li>
+          </div>
+        )}
+      </ul>
+
+      <div className="row">
+        {radioButtons.map(radio => {
+          return (
+            <div className="col-4">
+              <input className="form-check-input" type="radio" name="memoIndex" value={radio.value} checked={radio.value === memoIndex} onChange={changeRadioValue} />
+              <label className="form-check-label">
+                <span className="fs-6">{radio.label}</span>
+              </label>
+            </div>
+          )
+        })}
+      </div>
+
+      <button onClick={createMemo}>Create memo</button>
 
     </div>
   );

@@ -39,6 +39,17 @@
   justify-content: center;
 }
 
+.row-left {
+  display: flex;
+  justify-content: left;
+}
+
+.delete-button {
+  margin-right: 30px;
+  height: 20px;
+  font-size: 12px;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -106,4 +117,8 @@ button {
   button:active {
     background-color: #0f0f0f69;
   }
+}
+
+.pathList {
+  text-align: left;
 }

@@ -23,7 +23,7 @@
       },
       "fs": {
         "all": true,
-        "scope": ["$DOWNLOAD/*"], 
+        "scope": ["$DOWNLOAD/*", "$DESKTOP/*", "$DOCUMENT/*"], 
         "readFile": true,
         "writeFile": true,
         "readDir": true,
