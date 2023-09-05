@@ -1,6 +1,6 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import { invoke } from "@tauri-apps/api/tauri";
+// import reactLogo from "./assets/react.svg";
+// import { invoke } from "@tauri-apps/api/tauri";
 import { open } from '@tauri-apps/api/dialog'
 import "./App.css";
 import { writeTextFile, BaseDirectory } from '@tauri-apps/api/fs';
@@ -30,10 +30,6 @@ function App() {
   //   setGreetMsg(await invoke("greet", { name }));
   // }
 
-  function executeCommands() {
-    invoke("simple_command");
-  }
-
   function openDialog() {
     open().then(file => {
       console.log(file);
@@ -42,7 +38,7 @@ function App() {
   }
 
   function deleteFromList(_path: string) {
-    setSoulPathList(soulPathList.filter((path, index) => (path !== _path)));
+    setSoulPathList(soulPathList.filter((path) => (path !== _path)));
   }
 
   async function createMemo() {
