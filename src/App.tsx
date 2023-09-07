@@ -44,7 +44,7 @@ function App() {
   async function createMemo() {
 
     if(soulPathList.length == 16) {
-      let str: string = soulPathList.toString().replace(/,/g, '\n');
+      let str: string = soulPathList.toString().replace(/,/g, `\r\n`);
 
       await writeTextFile('footage' + memoIndex + '.txt', str, { dir: BaseDirectory.Desktop });
       alert('Created!');
